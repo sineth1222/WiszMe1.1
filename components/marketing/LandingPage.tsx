@@ -148,6 +148,7 @@ export default function LandingPage() {
         <Fireworks
           trigger={burst}
           colors={["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#f368e0"]}
+          rocketCount={3}
           //intense={scene === "final"}
         />
         <div className="relative z-10 flex flex-col items-center">
