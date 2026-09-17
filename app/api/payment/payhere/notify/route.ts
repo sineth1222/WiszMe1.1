@@ -1,0 +1,38 @@
+import { NextRequest, NextResponse } from "next/server";
+import { verifyPayHereNotification } from "@/lib/payhere";
+import { createServiceSupabase } from "@/lib/supabase/server";
+
+/**
+ * PayHere calls this server-to-server after a payment attempt — the only
+ * trustworthy signal that payment actually succeeded. Never trust a
+ * client-side "payment succeeded" callback alone for something this
+ * consequential.
+ */
+export async function POST(req: NextRequest) {
+  const form = await req.formData();
+  const params = Object.fromEntries(form.entries()) as Record<string, string>;
+
+  const valid = verifyPayHereNotification({
+    merchant_id: params.merchant_id,
+    order_id: params.order_id,
+    payhere_amount: params.payhere_amount,
+    payhere_currency: params.payhere_currency,
+    status_code: params.status_code,
+    md5sig: params.md5sig,
+  });
+
+  if (!valid) {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  }
+
+  if (params.status_code !== "2") {
+    return NextResponse.json({ ok: true });
+  }
+
+  const wishId = params.order_id.split("-")[1]; // order_id = `wm-<wishId>-<timestamp>`
+
+  const supabase = createServiceSupabase();
+  await supabase.from("wisz_wishes").update({ has_watermark: false }).eq("id", wishId);
+
+  return NextResponse.json({ ok: true });
+}

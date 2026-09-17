@@ -1,0 +1,23 @@
+//https://lottie.host/7d9654b8-86c9-48a7-b87a-ecd3f02f40ad/N0Oc8VJBvK.lottie
+
+"use client";
+
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
+/**
+ * The hero's visual centerpiece, powered by a Lottie animation instead of
+ * hand-drawn SVG. Same role as HeroCake in BirthzMe — the first thing the
+ * eye lands on.
+ */
+export function GoodLuckLottie() {
+  return (
+    <div className="relative flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
+      <DotLottieReact
+        src="https://lottie.host/7d9654b8-86c9-48a7-b87a-ecd3f02f40ad/N0Oc8VJBvK.lottie"
+        //loop
+        autoplay
+        style={{ width: "100%", height: "100%" }}
+      />
+    </div>
+  );
+}
